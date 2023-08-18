@@ -106,14 +106,19 @@ void drawSquare(Matrix<double, 3, 4> &proj, Square &S){
 }
 
 int main(void){
-    double Sx, Sy, Ox, Oy, d;
-    Sx = 1;
-    Sy = 1;
+    double Sx, Sy, Ox, Oy, Cx, Cy, d;
+    Sx = 2;
+    Sy = 2;
     
     // Ox = (far_right - far_left)/2
     // Oy = (top-bottom)/2
     Ox = width/2; 
     Oy = height/2;
+    // Note que o resultado de Ox e Oy é sempre o mesmo, independente da posição da câmera (estes valores dependem...
+    // ... da resolução servindo para levar do plano da câmera para o plano da tela em que só existe eixo x e y positivos...
+    // ... e em que o eixo y aponta para baixo), portanto neste modelo (sem o uso de Cx e Cy) se supõe que o centro...
+    // ... da câmera está em (0,0,0).
+
     d = 1;
 
     Square S;
@@ -122,27 +127,31 @@ int main(void){
     S.b = 0;
     Matrix<double, 4, 1> vertice3D;
     
+    // Vertice no canto inferior direito:
     vertice3D(0,0) = 250;
     vertice3D(1,0) = -250;
-    vertice3D(2,0) = 5;
+    vertice3D(2,0) = 0.5;
     vertice3D(3,0) = 1;
     S.vertices3D_list.push_back(vertice3D);
     
+    // Vertice no canto superior direito:
     vertice3D(0,0) = 250;
     vertice3D(1,0) = 250;
-    vertice3D(2,0) = 5;
+    vertice3D(2,0) = 8;
     vertice3D(3,0) = 1;
     S.vertices3D_list.push_back(vertice3D);
 
+    // Vertice no canto superior esquerdo:
     vertice3D(0,0) = -250;
     vertice3D(1,0) = 250;
-    vertice3D(2,0) = 7;
+    vertice3D(2,0) = 5;
     vertice3D(3,0) = 1; 
     S.vertices3D_list.push_back(vertice3D);
 
+    // Vertice no canto inferior esquerdo:
     vertice3D(0,0) = -250;
     vertice3D(1,0) = -250;
-    vertice3D(2,0) = 7;
+    vertice3D(2,0) = 0.5;
     vertice3D(3,0) = 1; 
     S.vertices3D_list.push_back(vertice3D);
     
@@ -160,8 +169,10 @@ int main(void){
 
     Eigen::Matrix<double, 3, 3> escala_padrao;
     escala_padrao.setZero();
-    escala_padrao(0, 0) = 1/Sx;
-    escala_padrao(1, 1) = 1/Sy;
+    // escala_padrao(0, 0) = 1/Sx;
+    escala_padrao(0, 0) = Sx;
+    // escala_padrao(1, 1) = 1/Sy;
+    escala_padrao(1, 1) = Sy;
     escala_padrao(2, 2) = 1;
 
     Eigen::Matrix<double, 3, 3> tr_padrao;
