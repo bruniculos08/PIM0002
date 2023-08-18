@@ -109,8 +109,9 @@ int main(void){
     double Sx, Sy, Ox, Oy, d;
     Sx = 1;
     Sy = 1;
-    // Note que apesador do centro de câmera ter coordena x = 0, para o novo sistema de cooordenadas devemos deslocar 1920/2 pois...
-    // ... os pontos com coordenadas negativas devem ficar com coordenadas positivas. 
+    
+    // Ox = (far_right - far_left)/2
+    // Oy = (top-bottom)/2
     Ox = width/2; 
     Oy = height/2;
     d = 1;
