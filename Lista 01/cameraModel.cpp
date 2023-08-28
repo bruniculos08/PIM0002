@@ -130,14 +130,14 @@ int main(void){
     // Vertice no canto inferior direito:
     vertice3D(0,0) = 250;
     vertice3D(1,0) = -250;
-    vertice3D(2,0) = 0.5;
+    vertice3D(2,0) = 10;
     vertice3D(3,0) = 1;
     S.vertices3D_list.push_back(vertice3D);
     
     // Vertice no canto superior direito:
     vertice3D(0,0) = 250;
     vertice3D(1,0) = 250;
-    vertice3D(2,0) = 8;
+    vertice3D(2,0) = 10;
     vertice3D(3,0) = 1;
     S.vertices3D_list.push_back(vertice3D);
 
@@ -151,7 +151,7 @@ int main(void){
     // Vertice no canto inferior esquerdo:
     vertice3D(0,0) = -250;
     vertice3D(1,0) = -250;
-    vertice3D(2,0) = 0.5;
+    vertice3D(2,0) = 5;
     vertice3D(3,0) = 1; 
     S.vertices3D_list.push_back(vertice3D);
     
