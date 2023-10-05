@@ -145,18 +145,27 @@ def gEnhancement(pixels, enhanced_pixels, i, j, window_height, window_width, glo
 		enhanced_pixels[i][j] = pixels[i][j]
 
 if __name__ == "__main__":
-	img = cv.imread("cabeloGonzalez.png", cv.IMREAD_GRAYSCALE)
+	name = "cabeloGonzalez.png"
+	img = cv.imread(name, cv.IMREAD_GRAYSCALE)
 	pixels = np.asarray(img)
 	equalized_pixels = np.zeros((len(pixels), len(pixels[0])), dtype=np.uint8)
 
+	frequencyArray = getFrequency(pixels)
+	showFrequency(frequencyArray)
 	equalized_pixels = equalizeImage(pixels)
 	showImage(equalized_pixels)
+
+	frequencyArray = getFrequency(equalized_pixels)
+	showFrequency(frequencyArray)
 
 	# equalizerImageLocallyForAll(pixels, equalized_pixels, 3, 3)
 	# showImage(equalized_pixels)
 
+
 	equalized_pixels = gEnhancementApply(pixels, equalized_pixels, 3, 3)
 	showImage(equalized_pixels)
 	# showImage(pixels)
+	frequencyArray = getFrequency(equalized_pixels)
+	showFrequency(frequencyArray)
 
 	# writeSpecification()
