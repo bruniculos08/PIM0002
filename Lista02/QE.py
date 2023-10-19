@@ -155,9 +155,7 @@ def integerConvertYQI(pixels):
 	return converted_pixels
 
 if __name__ == "__main__":
-	# img = cv.imread("predios.jpeg")
-	img = cv.imread("outono_LC.png")
-	writeSpecification()
+	img = cv.imread("predios.jpeg")
 	pixels_RGB = np.asarray(img)
 	pixels_YIQ = skimage.color.rgb2yiq(img)
 
@@ -166,8 +164,23 @@ if __name__ == "__main__":
 	showImage(equalized_pixels_YIQ, "YIQ")
 	showImage(equalized_pixels_RGB, "RGB")
 
-	G_array = getSpecification()
-	equalized_pixels_YIQ = skimage.color.yiq2rgb(equalizeImageBySpecification(pixels_YIQ, G_array, "YIQ"))
-	equalized_pixels_RGB = equalizeImageBySpecification(pixels_RGB, G_array, "RGB")
+	# G_array = getSpecification()
+	# equalized_pixels_YIQ = skimage.color.yiq2rgb(equalizeImageBySpecification(pixels_YIQ, G_array, "YIQ"))
+	# equalized_pixels_RGB = equalizeImageBySpecification(pixels_RGB, G_array, "RGB")
+	# showImage(equalized_pixels_YIQ, "YIQ")
+	# showImage(equalized_pixels_RGB, "RGB")
+
+	img = cv.imread("outono_LC.png")
+	pixels_RGB = np.asarray(img)
+	pixels_YIQ = skimage.color.rgb2yiq(img)
+
+	equalized_pixels_YIQ = skimage.color.yiq2rgb(equalizeImage(pixels_YIQ, "YIQ"))
+	equalized_pixels_RGB = equalizeImage(pixels_RGB, "RGB")
 	showImage(equalized_pixels_YIQ, "YIQ")
 	showImage(equalized_pixels_RGB, "RGB")
+
+	# G_array = getSpecification()
+	# equalized_pixels_YIQ = skimage.color.yiq2rgb(equalizeImageBySpecification(pixels_YIQ, G_array, "YIQ"))
+	# equalized_pixels_RGB = equalizeImageBySpecification(pixels_RGB, G_array, "RGB")
+	# showImage(equalized_pixels_YIQ, "YIQ")
+	# showImage(equalized_pixels_RGB, "RGB")
