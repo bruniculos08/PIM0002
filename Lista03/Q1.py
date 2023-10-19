@@ -27,7 +27,6 @@ def applyConvolutionAtPixel(old_pixels : np.ndarray, kernel : np.ndarray, x : in
     h, w = kernel.shape
     value = 0
 
-
     # gauss = [[1/16, 1/8, 1/16],
     #          [1/8, 1/4, 1/8],
     #          [1/16, 1/8, 1/16]]
@@ -48,7 +47,7 @@ def applyConvolutionAtPixel(old_pixels : np.ndarray, kernel : np.ndarray, x : in
     return np.int8(value)
 
 def convolution(old_pixels : np.ndarray, kernel : np.ndarray) -> np.ndarray:
-    new_pixels = np.zeros_like(old_pixels, dtype=np.int8)
+    new_pixels = np.zeros_like(old_pixels, dtype=np.uint8)
     for y in range(0, len(old_pixels)):
         for x in range(0, len(old_pixels[0])):
             new_pixels[y][x] = applyConvolutionAtPixel(old_pixels, kernel, x, y)
@@ -80,46 +79,22 @@ def showImage(pixels):
      
 def saveImage(name, pixels):
 	cv.imwrite(name, pixels)
+     
+def gaussianBlur(image_path : str, image_ext : str, kernel_height : int, kernel_width : int, standard_deviation : int, flag : bool = False) -> np.ndarray:
+    img = cv.imread(image_path + '.' + image_ext, cv.IMREAD_GRAYSCALE)
+    kernel = calcGaussianKernel(kernel_height, kernel_width, standard_deviation)
+    # print(kernel)
+    # print(sum(pixel for line in kernel for pixel in line))
+    pixels = np.asarray(img)
+    filter_pixels = convolution(pixels, kernel)
+    if(flag == True):
+        saveImage(image_path + "-GaussianFilter.png", filter_pixels)
+    return filter_pixels
 
 if __name__ == "__main__":
     np.set_printoptions(suppress = True)
     np.set_printoptions(linewidth=np.inf)
 
-    # img = cv.imread("home\\bruno\\PIM\\Imagens para testes\\taxaPerCapitaRouboCarros.png")
-    # img = cv.imread("DIP-XE.png", cv.IMREAD_GRAYSCALE)
-    # img = cv.imread("city.webp", cv.COLOR_RGB2RGBA)
-
-    # h = 3
-    # w = 3
-    # x = 0
-    # y = 0
-    # for i in range (0, h): 
-    #     for j in range(0, w):
-    #         print("i = " + str(i) + ", j = " + str(j))
-    #         # print("Color at x = " + str(x + roundDependentSignal(float(j) - (float(w)/2.0))) + ", y = " + str(x + roundDependentSignal(float(i) - (float(h)/2.0))))
-    #         print("Color at x = " + str(x + j - floor(w/2.0)) + ", y = " + str(x + i - floor(h/2.0)))
-    # pass
-
-    image_path = "Imagens/DIP-XE"
+    image_path = "Imagens/city"
     image_ext = "png"
-    img = cv.imread(image_path + '.' + image_ext, cv.IMREAD_GRAYSCALE)
-    
-    pixels = np.asarray(img)
-    height = len(pixels)
-    width = len(pixels[0])
-
-    standard_deviation = 3
-    kernel_size = 3
-    # kernel_size = 1+2*ceil(2*standard_deviation)
-    # kernel_size = ceil(2 * np.pi * standard_deviation)
-    # kernel_size = 2 * int(4 * standard_deviation + 0.5) + 1
-    kernel = calcGaussianKernel(kernel_size, kernel_size, standard_deviation)
-    print(kernel)
-    print(sum(pixel for line in kernel for pixel in line))
-
-    # filter_pixels = normalizeNDArray(convolution(pixels, kernel))
-    filter_pixels = convolution(pixels, kernel)
-
-    # saveImage(image_path + ".png", pixels)
-    saveImage(image_path + "-GaussianFilter.png", filter_pixels)
-    # gradient_pixels = np.zeros((height, width), dtype=np.int64)
+    filter_pixels = gaussianBlur(image_path, image_ext, 5, 5, 3, True)
