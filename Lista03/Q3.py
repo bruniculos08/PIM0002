@@ -4,6 +4,37 @@ import numpy as np
 import matplotlib.pyplot as plt
 from math import *
 
+prewit_x = np.asarray(
+        [[-1, 0, 1],
+        [-1, 0, 1],
+        [-1, 0, 1]])
+
+prewit_y = np.asarray(
+        [[-1, -1, -1],
+        [0, 0, 0],
+        [1, 1, 1]])
+
+sobel_x = np.asarray([
+            [-1, 0, 1],
+            [-2, 0, 2],
+            [-1, 0, 1]])
+
+sobel_y = np.asarray([
+            [-1, -2, -1],
+            [0, 0, 0],
+            [1, 2, 1]])
+
+scharr_x = np.asarray(
+            [[-3, 0, 3],
+            [-10, 0, 10],
+            [-3, 0, 3]])
+
+scharr_y = np.asarray(
+            [[-3, -10, -3],
+            [0, 0, 0],
+            [3, 10, 3]])
+
+
 def getColorAt(pixels : np.ndarray, x : int, y : int) -> np.float64:
     if(y < 0 or y >= len(pixels) or x < 0 or x >= len(pixels[0])):
         return 0
@@ -30,8 +61,8 @@ def applyConvolutionAtPixel(old_pixels : np.ndarray, kernel : np.ndarray, x : in
     # ... não havia nenhuma variável do for sendo usada.
     value = sum(kernel[i][j] * np.float64(getColorAt(old_pixels, x + j - floor(w/2.0), 
                                                     y + i - floor(h/2.0))) for i in range (0, h) for j in range(0, w))
-    if(value >= 256 or value < 0):
-         print("Overflow")
+    # if(value >= 256 or value < 0):
+    #      print("Overflow")
     return value
 
 def convolution(old_pixels : np.ndarray, kernel : np.ndarray) -> np.ndarray:
@@ -82,11 +113,43 @@ def gaussianBlur(image_path : str, image_ext : str, kernel_height : int, kernel_
         saveImage(image_path + "-GaussianFilter.png", filter_pixels)
     return filter_pixels
 
+def xAxisDerivative(image_path : str, image_ext : str):
+    img = cv.imread(image_path + '.' + image_ext, cv.IMREAD_GRAYSCALE)
+    pixels = np.asarray(img)
+    pixels_x_derivative = np.zeros_like(pixels, dtype=np.int64)
+    for y in range(0, len(pixels)):                                         # linhas
+        for x in range(0, len(pixels[0])):                                  # colunas
+            pixels_x_derivative[y][x] = applyConvolutionAtPixel(pixels, prewit_x, x, y) 
+    return pixels_x_derivative
+
+def yAxisDerivative(image_path : str, image_ext : str):
+    img = cv.imread(image_path + '.' + image_ext, cv.IMREAD_GRAYSCALE)
+    pixels = np.asarray(img)
+    pixels_y_derivative = np.zeros_like(pixels, dtype=np.int64)
+    for y in range(0, len(pixels)):                                         
+        for x in range(0, len(pixels[0])):                                  
+            pixels_y_derivative[y][x] = applyConvolutionAtPixel(pixels, prewit_y, x, y) 
+    return pixels_y_derivative
+
+def magnitude(pixels_x_derivative : np.ndarray, pixels_y_derivative : np.ndarray):
+    pixels_magnitude = np.zeros_like(pixels_x_derivative, dtype=np.int64)
+    for y in range(0, len(pixels_magnitude)):                                         
+        for x in range(0, len(pixels_magnitude[0])):                                  
+            pixels_magnitude[y][x] = sqrt(pixels_x_derivative[y][x] ** 2 + pixels_y_derivative[y][x] ** 2)
+    return pixels_magnitude
+
+
 if __name__ == "__main__":
     np.set_printoptions(suppress = True)
     np.set_printoptions(linewidth=np.inf)
 
     # image_path = "Imagens/DIP-XE"
-    image_path = "Imagens/Lua1_gray"
-    image_ext = "jpg"
-    filter_pixels = gaussianBlur(image_path, image_ext, 7, 7, 2, True)
+    image_path = "Imagens/DIP-XE-GaussianFilter"
+    image_ext = "png"
+    
+    pixels_x_derivative = xAxisDerivative(image_path, image_ext)
+    pixels_y_derivative = yAxisDerivative(image_path, image_ext)
+    pixels_magnitude = magnitude(pixels_x_derivative, pixels_y_derivative)
+    
+    plt.imshow(pixels_magnitude)
+    plt.show()
